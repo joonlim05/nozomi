@@ -6,8 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 
 @Entity
 @Table(name = "stations")
@@ -21,4 +19,10 @@ public class Station {
 
     @Column(nullable = false, unique = true)
     private String code;
+
+    @Builder
+    public Station(String name, String code){
+        this.name = name;
+        this.code = code;
+    }
 }

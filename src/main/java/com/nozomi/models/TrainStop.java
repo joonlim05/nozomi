@@ -8,8 +8,6 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 
 @Entity
 @Table(name = "trainStop")
@@ -34,4 +32,14 @@ public class TrainStop {
 
     @Column(nullable = true)
     private LocalTime departureTime;
+
+    // @Builder assists with the initialization process (can ignore id, db will generate)
+    @Builder
+    public TrainStop(Train train, Station station, Integer stopSequence, LocalTime arrivalTime, LocalTime departureTime) {
+        this.train = train;
+        this.station = station;
+        this.stopSequence = stopSequence;
+        this.arrivalTime = arrivalTime;
+        this.departureTime = departureTime;
+    }
 }
