@@ -3,14 +3,16 @@ spring:
     name: nozomi
 
   datasource:
-    url: JDBC:postgresql://localhost:5432/${POSTGRES_DB:nozomi_db}
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:nozomi_db}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
+  # change ddl-auto to "update" to persist data betw app runs.
+  # i'm using create-drop for demo purpose and ease of dev
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:

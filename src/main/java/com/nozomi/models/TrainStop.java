@@ -29,9 +29,9 @@ public class TrainStop {
     @Column(nullable = false)
     private Integer stopSequence;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalTime arrivalTime;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalTime departureTime;
 }
