@@ -17,7 +17,7 @@ public class Seat {
     private String seatNumber;
 
     @Column (nullable = false)
-    private int carNumber;
+    private Integer carNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "train_id", nullable = false)
