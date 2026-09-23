@@ -49,7 +49,7 @@ public class DataInitialiser implements CommandLineRunner {
         stationRepository.saveAll(List.of(tokyo, shinagawa, shinYokohama, nagoya, kyoto, shinOsaka));
 
 
-        Train nozomi1 = new Train(null, "Nozomi 1");
+        Train nozomi1 = new Train("Nozomi 1");
         trainRepository.save(nozomi1);
 
         // null arrival for origin, null departure for terminus
