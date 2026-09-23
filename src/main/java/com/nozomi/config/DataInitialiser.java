@@ -1,8 +1,10 @@
 package com.nozomi.config;
 
+import com.nozomi.models.Seat;
 import com.nozomi.models.Station;
 import com.nozomi.models.Train;
 import com.nozomi.models.TrainStop;
+import com.nozomi.repository.SeatRepository;
 import com.nozomi.repository.StationRepository;
 import com.nozomi.repository.TrainRepository;
 import com.nozomi.repository.TrainStopRepository;
@@ -11,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -19,16 +22,18 @@ public class DataInitialiser implements CommandLineRunner {
     private final StationRepository stationRepository;
     private final TrainRepository trainRepository;
     private final TrainStopRepository trainStopRepository;
+    private final SeatRepository seatRepository;
 
     // this is the class CONSTRUCTOR
     public DataInitialiser(
             StationRepository stationRepository,
             TrainRepository trainRepository,
-            TrainStopRepository trainStopRepository
+            TrainStopRepository trainStopRepository, SeatRepository seatRepository
     ) {
         this.stationRepository = stationRepository;
         this.trainRepository = trainRepository;
         this.trainStopRepository = trainStopRepository;
+        this.seatRepository = seatRepository;
     }
 
     // this is used to run the actual data seeding procedure. @Override is for safety check (ie. typo)
@@ -63,5 +68,13 @@ public class DataInitialiser implements CommandLineRunner {
         );
 
         trainStopRepository.saveAll(stops);
+
+        List<Seat> seats = new ArrayList<>();
+        char[] letters = {'A', 'B', 'C', 'D', 'E'};
+
+        for(int i=0; i<20; i++){
+            continue;
+            // add the mechanism to create seats here (nested for loop)
+        }
     }
 }
