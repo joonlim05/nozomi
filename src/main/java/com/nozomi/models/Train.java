@@ -15,10 +15,10 @@ public class Train {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String trainNumber;
+    private String trainName;
 
     @Builder
-    public Train(String trainNumber){
-        this.trainNumber = trainNumber;
+    public Train(String trainName){
+        this.trainName = trainName;
     }
 }
