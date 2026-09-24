@@ -25,4 +25,10 @@ public class Booking {
     @Column
     private LocalDateTime created_at;
 
+    @Builder
+    public Booking(Seat seat, String userId, LocalDateTime created_at){
+        this.seat = seat;
+        this.userId = userId;
+        this.created_at = created_at;
+    }
 }
