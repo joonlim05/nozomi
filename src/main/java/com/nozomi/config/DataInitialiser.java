@@ -69,12 +69,20 @@ public class DataInitialiser implements CommandLineRunner {
 
         trainStopRepository.saveAll(stops);
 
+        // i'm creating all the seats in memory then sending them one shot to the db
         List<Seat> seats = new ArrayList<>();
         char[] letters = {'A', 'B', 'C', 'D', 'E'};
 
-        for(int i=0; i<20; i++){
-            continue;
-            // add the mechanism to create seats here (nested for loop)
+        for (int car = 1; car <= 16; car++) {
+            for (int i = 1; i <= 20; i++) {
+                for (char letter : letters) {
+                    String seatNumber = Integer.toString(i) + letter;
+                    Seat seat = new Seat(seatNumber, car, nozomi1);
+                    seats.add(seat);
+                }
+            }
         }
+
+        seatRepository.saveAll(seats);
     }
 }

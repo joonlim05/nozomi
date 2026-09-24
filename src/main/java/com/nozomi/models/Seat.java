@@ -22,4 +22,11 @@ public class Seat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "train_id", nullable = false)
     private Train train;
+
+    @Builder
+    public Seat(String seatNumber, Integer carNumber, Train train){
+        this.seatNumber = seatNumber;
+        this.carNumber =  carNumber;
+        this.train = train;
+    }
 }
