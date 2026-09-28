@@ -23,13 +23,17 @@ public class Booking {
     @Column
     private String userId;
 
+    @Column
+    private LocalDateTime travelDate;
+
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;
 
     @Builder
-    public Booking(Seat seat, String userId){
+    public Booking(Seat seat, String userId, LocalDateTime travelDate){
         this.seat = seat;
         this.userId = userId;
+        this.travelDate = travelDate;
     }
 }
