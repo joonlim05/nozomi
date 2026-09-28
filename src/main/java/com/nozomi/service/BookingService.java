@@ -6,6 +6,7 @@ import com.nozomi.models.Seat;
 import com.nozomi.repository.BookingRepository;
 import com.nozomi.repository.SeatRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookingService {
@@ -17,11 +18,12 @@ public class BookingService {
         this.seatRepository = seatRepository;
     }
 
-    public void bookSeat(BookingRequest bookingRequest){
+    @Transactional
+    public Long bookSeat(BookingRequest bookingRequest){
         Seat seat = seatRepository.findSeatByDetails(bookingRequest.trainName(), bookingRequest.carNumber(), bookingRequest.seatNumber())
                 .orElseThrow(() -> new IllegalArgumentException("Seat not found: " + bookingRequest.seatNumber()));
 
-        boolean isTaken = bookingRepository.existsBySeat(seat);
+        boolean isTaken = bookingRepository.existsBySeatAndTravelDate(seat, bookingRequest.travelDate());
 
         if (isTaken){
             throw new IllegalStateException("Seat " + bookingRequest.seatNumber() + " is already taken");
@@ -29,15 +31,15 @@ public class BookingService {
 
         Booking booking = Booking.builder()
                 .seat(seat)
-                .userId(bookingRequest.userId()).
-                build();
+                .userId(bookingRequest.userId())
+                .travelDate(bookingRequest.travelDate())
+                .build();
 
-        bookingRepository.save(booking);
+        Booking saved = bookingRepository.save(booking);
+        return saved.getId();
 
         // TODO 1: Add booking based on the timeslot and journey legs
         // TODO 2: Deal with double booking
-        // TODO 3: @Transactional. Do smth abt dis
-        // TODO 4: Choose a return value to replace void.
     }
 
 }
