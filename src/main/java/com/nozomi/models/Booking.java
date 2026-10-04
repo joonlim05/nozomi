@@ -28,23 +28,23 @@ public class Booking {
     private LocalDate travelDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_station_id", nullable = false)
-    private Station fromStation;
+    @JoinColumn(name = "start_station_id", nullable = false)
+    private Station startStation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_station_id", nullable = false)
-    private Station toStation;
+    @JoinColumn(name = "end_station_id", nullable = false)
+    private Station endStation;
 
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;
 
     @Builder
-    public Booking(String userId, Seat seat, LocalDate travelDate, Station fromStation, Station toStation){
+    public Booking(String userId, Seat seat, LocalDate travelDate, Station startStation, Station endStation){
         this.userId = userId;
         this.seat = seat;
         this.travelDate = travelDate;
-        this.fromStation = fromStation;
-        this.toStation = toStation;
+        this.startStation = startStation;
+        this.endStation = endStation;
     }
 }

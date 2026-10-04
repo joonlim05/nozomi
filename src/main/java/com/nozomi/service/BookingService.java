@@ -5,17 +5,23 @@ import com.nozomi.models.Booking;
 import com.nozomi.models.Seat;
 import com.nozomi.repository.BookingRepository;
 import com.nozomi.repository.SeatRepository;
+import com.nozomi.repository.TrainRepository;
+import com.nozomi.repository.TrainStopRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final SeatRepository seatRepository;
+    private final TrainStopRepository trainStopRepository;
 
-    public BookingService(BookingRepository bookingRepository, SeatRepository seatRepository) {
+    public BookingService(BookingRepository bookingRepository, SeatRepository seatRepository, TrainStopRepository trainStopRepository) {
         this.bookingRepository = bookingRepository;
         this.seatRepository = seatRepository;
+        this.trainStopRepository = trainStopRepository;
     }
 
     @Transactional
@@ -23,7 +29,7 @@ public class BookingService {
         Seat seat = seatRepository.findSeatByDetails(bookingRequest.trainName(), bookingRequest.carNumber(), bookingRequest.seatNumber())
                 .orElseThrow(() -> new IllegalArgumentException("Seat not found: " + bookingRequest.seatNumber()));
 
-        boolean isTaken = bookingRepository.existsBySeatAndTravelDate(seat, bookingRequest.travelDate());
+        boolean isTaken = bookingRepository.existsBySeatAndTravelDate(seat, LocalDate.from(bookingRequest.travelDate()));
 
         if (isTaken){
             throw new IllegalStateException("Seat " + bookingRequest.seatNumber() + " is already taken");
@@ -32,15 +38,22 @@ public class BookingService {
         Booking booking = Booking.builder()
                 .seat(seat)
                 .userId(bookingRequest.userId())
-                .travelDate(bookingRequest.travelDate())
+                .travelDate(LocalDate.from(bookingRequest.travelDate()))
                 .build();
 
         Booking saved = bookingRepository.save(booking);
-        return saved.getId();
 
         // TODO 1: Add booking based on the timeslot and journey legs
+        int startSeq =  trainStopRepository.findStopSequence(booking.getSeat().getTrain().getTrainName(), booking.getStartStation().getCode())
+                .orElseThrow(() -> new IllegalArgumentException("Start station not found on train route"));
+
+        int endSeq =  trainStopRepository.findStopSequence(booking.getSeat().getTrain().getTrainName(), booking.getEndStation().getCode())
+                .orElseThrow(() -> new IllegalArgumentException("End station not found on train route"));
+
 
         // TODO 2: Deal with double booking
+
+        return saved.getId();
     }
 
 }
