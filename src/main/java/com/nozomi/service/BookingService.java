@@ -25,13 +25,13 @@ public class BookingService {
     }
 
     @Transactional
-    public Long bookSeat(BookingRequest bookingRequest){
+    public Long bookSeat(BookingRequest bookingRequest) {
         Seat seat = seatRepository.findSeatByDetails(bookingRequest.trainName(), bookingRequest.carNumber(), bookingRequest.seatNumber())
                 .orElseThrow(() -> new IllegalArgumentException("Seat not found: " + bookingRequest.seatNumber()));
 
         boolean isTaken = bookingRepository.existsBySeatAndTravelDate(seat, LocalDate.from(bookingRequest.travelDate()));
 
-        if (isTaken){
+        if (isTaken) {
             throw new IllegalStateException("Seat " + bookingRequest.seatNumber() + " is already taken");
         }
 
@@ -44,11 +44,15 @@ public class BookingService {
         Booking saved = bookingRepository.save(booking);
 
         // TODO 1: Add booking based on the timeslot and journey legs
-        int startSeq =  trainStopRepository.findStopSequence(booking.getSeat().getTrain().getTrainName(), booking.getStartStation().getCode())
-                .orElseThrow(() -> new IllegalArgumentException("Start station not found on train route"));
+        int startSeq = trainStopRepository.findStopSequence(
+                bookingRequest.trainName(),
+                bookingRequest.startStationCode()
+        ).orElseThrow(() -> new IllegalArgumentException("Start station not found on train route"));
 
-        int endSeq =  trainStopRepository.findStopSequence(booking.getSeat().getTrain().getTrainName(), booking.getEndStation().getCode())
-                .orElseThrow(() -> new IllegalArgumentException("End station not found on train route"));
+        int endSeq = trainStopRepository.findStopSequence(
+                bookingRequest.trainName(),
+                bookingRequest.endStationCode()
+        ).orElseThrow(() -> new IllegalArgumentException("End station not found on train route"));
 
 
         // TODO 2: Deal with double booking
